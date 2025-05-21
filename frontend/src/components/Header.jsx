@@ -8,7 +8,7 @@ const Header = () => {
           Easyday
         </Link>
         <Link
-          to="/new"
+          to="/tasks/create"
           className="btn btn-primary text-white"
         >
           + New Task

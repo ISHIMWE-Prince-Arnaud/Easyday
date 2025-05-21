@@ -26,13 +26,15 @@ const Home = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">All Tasks</h2>
-      {tasks.length === 0 ? (
-        <p>No tasks found.</p>
-      ) : (
+    <div className="min-h-screen px-4">
+      <h2 className="text-2xl font-bold mb-6 text-center">All Tasks</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 w-full">
+       {tasks.length === 0 ? (
+        <p className="col-span-full text-center text-gray-500">No tasks found.</p>
+        ) : (
         tasks.map((task) => <TaskCard key={task._id} task={task} />)
-      )}
+        )}
+      </div>
     </div>
   );
 };
