@@ -21,10 +21,20 @@ const Create = () => {
       toast.error("Please fill in all fields.");
       return;
     }
-    if (task.dueDate < new Date().toISOString().split("T")[0]) {
-      toast.error("Due date cannot be in the past.");
+
+    // Parse dueDate as local date
+    const [year, month, day] = task.dueDate.split("-");
+    const dueDate = new Date(year, month - 1, day); // month is 0-indexed
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+
+    if (dueDate < today) {
+      toast.error("Due date must be today or in the future.");
       return;
     }
+
+    // Validate title length
     if (task.title.length < 3) {
       toast.error("Title must be at least 3 characters long.");
       return;

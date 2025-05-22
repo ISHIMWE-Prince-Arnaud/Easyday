@@ -7,12 +7,14 @@ export async function getAllTasks(req, res, next) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
+    const total = await Task.countDocuments();
+
     const tasks = await Task.find()
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    res.json(tasks);
+    res.json({ tasks, total });
   } catch (error) {
     next(error);
   }
