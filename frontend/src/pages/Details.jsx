@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import api from "../utils/axios";
+import { motion } from "framer-motion";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Details = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -48,47 +50,69 @@ const Details = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (!task) return <p>Task not found.</p>;
+  if (loading) {
+    return (
+      <div className="text-center py-20">
+        <LoadingSpinner /> 
+      </div>
+    );
+  }
+
+  if (!task) {
+    return <p className="text-center text-red-500 mt-10">Task not found.</p>;
+  }
 
   return (
-    <div className="bg-white p-6 rounded shadow max-w-xl mx-auto mt-6">
+    <motion.div
+      className="bg-white p-6 rounded-2xl shadow max-w-xl mx-auto mt-8"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 70 }}
+    >
       {/* Back Button */}
       <button
         onClick={() => navigate("/")}
-        className="btn btn-ghost btn-primary mb-2"
+        className="text-blue-600 hover:underline font-medium mb-4"
       >
         ← Back to Tasks
       </button>
 
-      <h2 className="text-2xl font-bold mb-2">{task.title}</h2>
-      <p className="text-gray-700">{task.description}</p>
-      <p className="text-gray-500 mt-1">
-        Due: {task.dueDate && !isNaN(new Date(task.dueDate))
+      <h2 className="text-3xl font-bold text-gray-800 mb-2">{task.title}</h2>
+      <p className="text-gray-700 mb-3">{task.description}</p>
+      <p className="text-sm text-gray-500 mb-1">
+        Due:{" "}
+        {task.dueDate && !isNaN(new Date(task.dueDate))
           ? new Date(task.dueDate).toLocaleDateString()
           : "N/A"}
       </p>
-      <p className="mt-1">
-        Status: {task.completed ? "✅ Completed" : "⏳ Pending"}
+      <p className="text-sm text-gray-500 mb-4">
+        Status:{" "}
+        <span className={task.completed ? "text-green-600" : "text-yellow-500"}>
+          {task.completed ? "✅ Completed" : "⏳ Pending"}
+        </span>
       </p>
 
-      <div className="mt-4 flex gap-3">
-        <button
+      <div className="flex gap-3">
+        <motion.button
           onClick={handleToggleComplete}
-          className={`${
-            task.completed ? "bg-yellow-500 hover:bg-yellow-600" : "bg-green-600 hover:bg-green-700"
-          } text-white px-4 py-2 rounded`}
+          whileTap={{ scale: 0.95 }}
+          className={`flex-1 px-4 py-2 rounded-lg text-white transition ${
+            task.completed
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-green-600 hover:bg-green-700"
+          }`}
         >
           {task.completed ? "Mark as Incomplete" : "Mark as Completed"}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={handleDelete}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          whileTap={{ scale: 0.95 }}
+          className="flex-1 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition"
         >
           Delete
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -3,6 +3,7 @@ import TaskForm from "../components/TaskForm";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const Create = () => {
   const [task, setTask] = useState({ title: "", description: "", dueDate: "" });
@@ -15,6 +16,7 @@ const Create = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!task.title || !task.description || !task.dueDate) {
       toast.error("Please fill in all fields.");
       return;
@@ -29,7 +31,6 @@ const Create = () => {
     }
 
     setIsLoading(true);
-
     try {
       await api.post("/", task);
       toast.success("Task created successfully!");
@@ -43,10 +44,20 @@ const Create = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Create Task</h2>
-      <TaskForm task={task} onChange={handleChange} onSubmit={handleSubmit} isLoading={isLoading} />
-    </div>
+    <motion.div
+      className="max-w-2xl mx-auto mt-8"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h2 className="text-3xl font-bold mb-4 text-gray-800">Create Task</h2>
+      <TaskForm
+        task={task}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+      />
+    </motion.div>
   );
 };
 

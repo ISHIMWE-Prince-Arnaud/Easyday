@@ -10,7 +10,7 @@ function App() {
   return (
       <div className="min-h-screen bg-gray-100 text-gray-800">
         <Header />
-        <div className="p-4 mx-auto max-w-6xl">
+        <div className="p-4 mx-auto max-w-4xl">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tasks/create" element={<Create />} />
